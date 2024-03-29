@@ -1,3 +1,34 @@
 .App {
   text-align: center;
 }
+
+.inputFieldText {
+  width: 800px; 
+  height: 300px;
+}
+
+.form {
+  position: fixed;
+  bottom: 20px; /* Adjust this value to position it higher or lower from the bottom */
+  left: 20px; /* Adjust this value to position it towards left or right */
+}
+
+.inputFieldText {
+  border-radius: 20px;
+  border: 2px solid #000000; 
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+.inputFieldText:focus {
+  border-color: #007bff;
+}
+
+.title  {
+  position: fixed;
+  top: 20%;
+  left: 2%;
+  text-align: left;
+  font-size: xxx-large;
+}
