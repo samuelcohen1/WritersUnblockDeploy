@@ -6,7 +6,6 @@ import './App.css';
 function App() {
   function Title() {
     return (
-      
       <div className="title">
         Writer's Unblock
       </div>
@@ -14,7 +13,7 @@ function App() {
   }
 
   function Toggle() {
-
+    
   }
 
   function InputField() {

@@ -1,5 +1,9 @@
 //Sam
+//array
+//hash function
+//seperate chaining
 
+<<<<<<< HEAD
 
 class Map {    // Only will allow strings as keys--fortunately, that's what we have!
     constructor() {
@@ -151,3 +155,17 @@ async function main() {
 }
 
 main();
+=======
+function hash(str)  {
+    let hash = 5381;
+    for(let i = 0; i < str.length; i++)
+    {
+        hash = hash * 33 + str.charCodeAt(i);
+    }
+    return hash;
+}
+
+console.log(hash('samuel'));
+console.log(hash('abhinav'));
+console.log(hash('aditya'));
+>>>>>>> 70d3c6de20fdf1ab01c24afc77a1c674c2202820
