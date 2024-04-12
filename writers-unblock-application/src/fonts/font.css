@@ -1,0 +1,20 @@
+/* fonts.css */
+@font-face {
+    font-family: 'Courier';
+    src: url('./CourierPrime-Regular.ttf') format('truetype');
+    /* You can add more font weights and styles here if needed */
+  }
+
+
+  @font-face {
+    font-family: 'Courier bold';
+    src: url('./CourierPrime-Bold.ttf') format('truetype');
+    /* You can add more font weights and styles here if needed */
+  }
+
+  @font-face {
+    font-family: 'Josefin';
+    src: url('./JosefinSlab-VariableFont_wght.ttf') format('truetype');
+    /* You can add more font weights and styles here if needed */
+    /* font-weight: 700; /* Specify bold weight */   
+}

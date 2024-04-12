@@ -32,3 +32,11 @@
   text-align: left;
   font-size: xxx-large;
 }
+
+.blackText {
+  color: black;
+}
+
+.grayText {
+  color: gray;
+}
