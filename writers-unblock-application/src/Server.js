@@ -1,6 +1,6 @@
 //Abhinav
 
-//Actual implementation of hte project
+//Actual implementation of the project
 const Implementation = require('./Implementation/WordAssociationImplementation/implementation.js');
 
 //normal set up
@@ -17,7 +17,7 @@ app.get('/getWord/:lastWord', (req, res) => {
     res.send(nextWord);
 });
 
-
+//start up the server
 server.listen(3000, () => {
     console.log('Server is running on port 3000');
 });

@@ -56,6 +56,10 @@ class MaxHeap {
         this.heapifyDown();
         return max;
     }
+
+    peekRandom()    {
+        return this.heapArray[Math.floor(Math.random() * 3)]
+    }
 }
 
 async function main()   {
@@ -81,10 +85,12 @@ async function main()   {
     mh.add(12);
     console.log(mh.extractMax());
     console.log(mh.extractMax());
+    console.log('random: ', mh.peekRandom());
     console.log(mh.extractMax());
     console.log(mh.extractMax());
     console.log(mh.extractMax());
     console.log(mh.extractMax());
+    console.log('random: ', mh.peekRandom());
     console.log(mh.extractMax());
     console.log(mh.extractMax());
     console.log(mh.extractMax());
