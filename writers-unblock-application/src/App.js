@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions'; // Import DialogActions
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon component from @mui/icons-material package
 import IconButton from '@mui/material/IconButton'; // Import CloseIcon component
 import Box from '@mui/material/Box'; // Import CloseIcon component
+import axios from 'axios'; //Import axios for backend integration
 
 
 
@@ -48,6 +49,19 @@ const App = () => {
   useEffect(() => {
     const predictedWord = mockPredictions[sentence.slice(0, inputRef.current.selectionStart)]; // Get prediction based on typed part
     setPrediction(predictedWord);
+
+    //backend integration
+    const fetchServer = async () => {
+        try {
+          const lastWord = str.split(" ").slice(-1)[0];
+          const response = await axios.get(`/getWord/${lastWord}/${switchValue}`);
+          setData(response.data);
+        }
+        catch(error)  {
+          console.log(error);
+        }
+    }
+    
   }, [sentence]);
 
   const handleSwitchChange = () => {

@@ -12,8 +12,9 @@ const server = http.createServer(app);
 
 
 //takes in the last word and gives the next word
-app.get('/getWord/:lastWord', (req, res) => {
+app.get('/getWord/:lastWord/:method', (req, res) => {
     const nextWord = Implementation.implement(req.params.lastWord);
+    let method = req.params.method;
     res.send(nextWord);
 });
 
