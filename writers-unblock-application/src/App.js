@@ -51,16 +51,16 @@ const App = () => {
     setPrediction(predictedWord);
 
     //backend integration
-    const fetchServer = async () => {
-        try {
-          const lastWord = str.split(" ").slice(-1)[0];
-          const response = await axios.get(`/getWord/${lastWord}/${switchValue}`);
-          setData(response.data);
-        }
-        catch(error)  {
-          console.log(error);
-        }
-    }
+    // const fetchServer = async () => {
+    //     try {
+    //       const lastWord = sentence.split(" ").slice(-1)[0];
+    //       const response = await axios.get(`/getWord/${lastWord}/${switchValue}`);
+    //       setPrediction(response.data);
+    //     }
+    //     catch(error)  {
+    //       console.log(error);
+    //     }
+    // }
     
   }, [sentence]);
 
