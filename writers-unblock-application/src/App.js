@@ -31,7 +31,7 @@ const App = () => {
   const handleKeyDown = (event) => {
     if (event.key === 'Tab' && prediction) {
       event.preventDefault(); 
-      setSentence(`${sentence} ${prediction}`);
+      setSentence(`${sentence}${prediction}`);
       setPrediction('');
     }
   };
@@ -51,16 +51,20 @@ const App = () => {
     setPrediction(predictedWord);
 
     //backend integration
-    // const fetchServer = async () => {
-    //     try {
-    //       const lastWord = sentence.split(" ").slice(-1)[0];
-    //       const response = await axios.get(`/getWord/${lastWord}/${switchValue}`);
-    //       setPrediction(response.data);
-    //     }
-    //     catch(error)  {
-    //       console.log(error);
-    //     }
-    // }
+    const fetchServer = async () => {
+        try {
+          const lastWord = sentence.split(" ").slice(-2)[0];
+          const response = await axios.get(`http://localhost:8001/getWord/${lastWord}/${switchValue}`);
+          setPrediction(response.data);
+          console.log(prediction);
+        }
+        catch(error)  {
+          console.log(error);
+        }
+    }
+    if(sentence.charAt(sentence.length - 1) == ' ') {
+       fetchServer();
+    }
     
   }, [sentence]);
 
@@ -199,7 +203,7 @@ const App = () => {
               variant="body1"
               style={{
                 marginTop: "1px",
-                marginRight: prediction ? `${1162 - sentence.length * 9.75 - prediction.length * 9.75}px` : '300px',
+                marginRight: prediction ? `${1162 + 9.75 - sentence.length * 9.75 - prediction.length * 9.75}px` : '300px',
                 fontFamily: 'Courier, monospace',
                 color: 'gray',
                 fontWeight: "600"
