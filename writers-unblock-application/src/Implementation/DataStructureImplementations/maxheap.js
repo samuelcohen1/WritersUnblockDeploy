@@ -58,7 +58,24 @@ class MaxHeap {
     }
 
     peekRandom()    {
-        return this.heapArray[Math.floor(Math.random() * 3)]
+        const heapArrayCopy = this.heapArray;
+        let randArray = [];
+        randArray.push(this.extractMax());
+        randArray.push(this.extractMax());
+        randArray.push(this.extractMax());
+        this.heapArray = heapArrayCopy;
+        return randArray[Math.floor(Math.random() * 3)];
+    }
+
+    print() {
+        let str = "[";
+        for(let i = 0; i < this.heapArray.length; ++i)
+        {
+            str += this.heapArray.at(i);
+            if(i != this.heapArray.length - 1)
+                str += ", ";
+        }
+        console.log(str + "]\n");
     }
 }
 
@@ -85,24 +102,8 @@ async function main()   {
     mh.add(12);
     console.log(mh.extractMax());
     console.log(mh.extractMax());
+    mh.print();
     console.log('random: ', mh.peekRandom());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log('random: ', mh.peekRandom());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
-    console.log(mh.extractMax());
     console.log(mh.extractMax());
 };
 
