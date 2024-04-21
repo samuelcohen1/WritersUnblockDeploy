@@ -1,7 +1,7 @@
 //Sam
 
 
-class Map {    // Only will allow strings as keys--fortunately, that's what we have!
+class Map {
     constructor() {
         this.arr = new Array(2).fill(null);
         this.load = 0.0;
@@ -131,23 +131,26 @@ class Map {    // Only will allow strings as keys--fortunately, that's what we h
     }
 }
 
-async function main() {
-    console.log("running main!!");
+module.exports = Map;
 
-    let myMap = new Map();
-    myMap.insert("two", 2);
-    myMap.insert("three", 3);
-    // myMap.insert(20, "twenty");
-    myMap.insert("new three", 4);
-    console.log(myMap.arr.length);
-    console.log(myMap.load);
 
-    // console.log(myMap.get("three"));
-    console.log(myMap.unravelList());
-    myMap.rehash();
-    myMap.insert("new three", 5);
-    console.log(myMap.unravelList());
-    console.log(Map.stringHash("hello"));
-}
+// async function main() {
+//     console.log("running main!!");
 
-main();
+//     let myMap = new Map();
+//     myMap.insert("two", 2);
+//     myMap.insert("three", 3);
+//     // myMap.insert(20, "twenty");
+//     myMap.insert("new three", 4);
+//     console.log(myMap.arr.length);
+//     console.log(myMap.load);
+
+//     // console.log(myMap.get("three"));
+//     console.log(myMap.unravelList());
+//     myMap.rehash();
+//     myMap.insert("new three", 5);
+//     console.log(myMap.unravelList());
+//     console.log(Map.stringHash("hello"));
+// }
+
+// main();

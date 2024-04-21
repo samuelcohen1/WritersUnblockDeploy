@@ -1,130 +1,96 @@
-//Adi
-const { Map } = require('../DataStructureImplementations/map');
-const { MaxHeap } = require('../DataStructureImplementations/maxheap');
-
-
+const Map = require('../DataStructureImplementations/map');
+const MaxHeap = require('../DataStructureImplementations/maxheap');
 const fs = require('fs');
 
-class Implementation 
-{
-    myMap = new Map();
-    implementType = "";
+class Implementation {
+    constructor() {
+        this.myMap1 = new Map();
+        this.myMap2 = new Map();
 
-    //take string input to determine implementation
-    constructor(implementType) 
-    {
-        this.myMap.clear();
-        this.implementType = implementType;
-        let eastOfEden = readFile();
-        let word = eastOfEden.substr(0, " ");
+        let eastOfEden = this.readFile();
 
-        if(implementType == "implement1")
-        {
-            while(eastOfEden.length() > 10)
-            {
-                myMap.insert(word, helper1(word, eastOfEden));
-                eastOfEden = eastOfEden.substr(" " + 1);
-                word = eastOfEden.substr(0, " ");
+        let wordArray = eastOfEden.split(" ");
+
+        wordArray.forEach(word => {
+            //console.log(word);
+            this.myMap1.insert(word, Implementation.helper1(word, eastOfEden));
+            this.myMap2.insert(word, Implementation.helper2(word, eastOfEden));
+        });
+    }
+
+    readFile() {
+        return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8');
+    }
+
+    static helper1(lastWord, file) {
+        let wordArray = file.split(" ");
+        let myHeap = new MaxHeap();
+
+        for(let i = 0; i < wordArray.length - 1; i++) {
+            if(wordArray[i].toLowerCase() === lastWord.toLowerCase()) {
+                myHeap.increment(wordArray[i+1]);
             }
         }
-        else if(implementType == "implement2")
-        {
-            while(eastOfEden.length() > 10)
-            {
-                myMap.insert(word, helper2(word, eastOfEden));
-                eastOfEden = eastOfEden.substr(" " + 1);
-                word = eastOfEden.substr(0, " ");
+
+        return myHeap; 
+    }
+
+    static helper2(lastWord, file) {
+        let wordArray = file.split(" ");
+        let innerMap = new Map();
+
+        for(let i = 0; i < wordArray.length - 1; i++) {
+            if(wordArray[i].toLowerCase() === lastWord.toLowerCase()) {
+                innerMap.insert(wordArray[i+1], 1); // Inserting with value 1, assuming it's a count
+            }
+        }
+
+        return innerMap;
+    }
+
+    static implement1(lastWord) {
+        for (let [key, value] of this.myMap1) {
+            if (key === lastWord) {
+                return value.peek();
             }
         }
     }
 
-    //reads east of eden text file
-    readFile()  
-    {
-        fs.readFile('../../TextMaterial/EastofEden.txt', (err, data) => {
-            //if (err) throw err;
-           
-            return data.toString();
-          });
-    }
+    static implement2(lastWord) {
+        for (let [key, innerMap] of this.myMap2) {
+            let maxString = "";
+            let max = -1;
 
-    static helper1(lastWord, file)
-    {
-        let fileCopy = file;
-        let myHeap = MaxHeap();
+            if (key === lastWord) {
+                for (let [innerKey, value] of innerMap) {
+                    if (value > max) {
+                        max = value;
+                        maxString = innerKey;
+                    }
+                }
+            }
 
-        //not checking endings in periods or word used in different tenses or anything like that, word has to be beginning or middle of a sentence.
-        //this will still pose a problem with this code however, can fix after testing
-
-        while(fileCopy.indexOf(lastWord) != -1)
-        {
-            fileCopy = fileCopy.substr(fileCopy.indexOf(lastWord));
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-            let nextWord = fileCopy.substr(0, fileCopy.indexOf(" "));
-            //implement existence if/else, which will have to search maxheap, ACCOUNT IN BIG(O)
-            let exists = false;
-
-            myHeap.add(nextWord);
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-        }
-
-        return myHeap; // Replace 'bagel' with your actual implementation logic
-    }
-
-    static helper2(lastWord, file)
-    {
-        let fileCopy = file;
-        let myMapTwo = Map();
-
-        while(fileCopy.indexOf(lastWord) != -1)
-        {
-            fileCopy = fileCopy.substr(fileCopy.indexOf(lastWord));
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-            let nextWord = fileCopy.substr(0, fileCopy.indexOf(" "));
-            //implement existence if/else, which will have to search map, account in BIG(O)
-            let exists = false;
-
-            myMapTwo.insert(nextWord, 1);
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
+            return maxString;
         }
     }
 
-    //takes in last word and performs method 1
-    //IGNORE THIS FOR NOW
-    static implement1(lastWord) 
-    {
-        
-    }
-
-    //takes in last word and performs method 2
-    //IGNORE THIS FOR NOW
-    static implement2(lastWord) 
-    {
-        let eastOfEden = readFile();
-
-        let myMap = Map();
-
-        while(fileCopy.indexOf(lastWord) != -1)
-        {
-            fileCopy = fileCopy.substr(fileCopy.indexOf(lastWord));
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-            let nextWord = fileCopy.substr(0, fileCopy.indexOf(" "));
-            myMap.insert(nextWord);
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
+    static implement(implementType, word) {
+        if (implementType === "implement1") {
+            return this.implement1(word);
+        } else if (implementType === "implement2") {
+            return this.implement2(word);
+        } else {
+            console.log("Invalid Input");
         }
-
-        return lastWord; // Replace 'bagel' with your actual implementation logic
     }
 }
 
 module.exports = Implementation;
 
-//export default Implementation;
-
-async function main() 
-{
+async function main() {
+    console.log('bleh');
     let implementation = new Implementation();
-    implementation.readFile();
+    console.log('bleh');
 }
 
 main();
