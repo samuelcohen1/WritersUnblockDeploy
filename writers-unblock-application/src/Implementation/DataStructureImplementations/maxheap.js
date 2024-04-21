@@ -32,7 +32,7 @@ class MaxHeap {
     }
 
     peek() {
-        return this.heapArray[0];
+        return this.heapArray[0].string;
     }
 
     extractMax() {
@@ -46,17 +46,23 @@ class MaxHeap {
     }
 
     peekRandom() {
+        console.log('breh');
         const heapArrayCopy = [...this.heapArray];
         let randArray = [];
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
+        console.log(randArray);
         this.heapArray = heapArrayCopy;
-        return randArray[Math.floor(Math.random() * 3)];
+        return randArray[Math.floor(Math.random() * 3)].string;
     }
 
     increment(string) {
         const index = this.heapArray.findIndex(item => item.string === string);
+        if(item == -1)
+        {
+            this.add(string, 1);
+        }
         if (index !== -1) {
             this.heapArray[index].priority += 1;
 
