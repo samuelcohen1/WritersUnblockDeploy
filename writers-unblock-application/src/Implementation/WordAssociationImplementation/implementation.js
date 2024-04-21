@@ -1,20 +1,17 @@
 //Adi
-const { Map } = require('../DataStructureImplementations/map');
-const { MaxHeap } = require('../DataStructureImplementations/maxheap');
+const { Map } = require('../DataStructureImplementations/map.js');
+const { MaxHeap } = require('../DataStructureImplementations/maxheap.js');
 
 
 const fs = require('fs');
 
 class Implementation 
 {
-    myMap1 = new Map();
-    myMap2 = new Map();
-
     //take string input to determine implementation
-    constructor() 
+    constructor()
     {
-        this.myMap1.clear();
-        this.myMap2.clear();
+        this.myMap1 = new Map();
+        this.myMap2 = new Map();
         let eastOfEden = readFile();
 
         let wordArray = eastOfEden.split(" ");
@@ -25,8 +22,6 @@ class Implementation
             myMap2.insert(word, helper2(word, eastOfEden));
         });
     }
-
-    //overarching implement method that accepts a boolean and then 
 
     //reads east of eden text file
     readFile()  
@@ -133,6 +128,7 @@ module.exports = Implementation;
 async function main() 
 {
     let implementation = new Implementation();
+    console.log("Hi");
 }
 
 main();
