@@ -7,65 +7,52 @@ const fs = require('fs');
 
 class Implementation 
 {
-    myMap = new Map();
-    implementType = "";
+    myMap1 = new Map();
+    myMap2 = new Map();
 
     //take string input to determine implementation
-    constructor(implementType) 
+    constructor() 
     {
-        this.myMap.clear();
-        this.implementType = implementType;
+        this.myMap1.clear();
+        this.myMap2.clear();
         let eastOfEden = readFile();
-        let word = eastOfEden.substr(0, " ");
 
-        if(implementType == "implement1")
+        let wordArray = eastOfEden.split(" ");
+
+        wordArray.forEach(word => 
         {
-            while(eastOfEden.length() > 10)
-            {
-                myMap.insert(word, helper1(word, eastOfEden));
-                eastOfEden = eastOfEden.substr(" " + 1);
-                word = eastOfEden.substr(0, " ");
-            }
-        }
-        else if(implementType == "implement2")
-        {
-            while(eastOfEden.length() > 10)
-            {
-                myMap.insert(word, helper2(word, eastOfEden));
-                eastOfEden = eastOfEden.substr(" " + 1);
-                word = eastOfEden.substr(0, " ");
-            }
-        }
+            myMap1.insert(word, helper1(word, eastOfEden));
+            myMap2.insert(word, helper2(word, eastOfEden));
+        });
     }
+
+    //overarching implement method that accepts a boolean and then 
 
     //reads east of eden text file
     readFile()  
     {
-        fs.readFile('../../TextMaterial/EastofEden.txt', (err, data) => {
+        fs.readFile('../../TextMaterial/EastofEden.txt', (err, data) => 
+        {
             //if (err) throw err;
            
             return data.toString();
-          });
+        });
     }
 
     static helper1(lastWord, file)
     {
-        let fileCopy = file;
-        let myHeap = MaxHeap();
+        wordArray = file.split(" ");
+        let myHeap = new MaxHeap();
 
         //not checking endings in periods or word used in different tenses or anything like that, word has to be beginning or middle of a sentence.
         //this will still pose a problem with this code however, can fix after testing
 
-        while(fileCopy.indexOf(lastWord) != -1)
+        for(let i = 0; i < wordArray.length; i++)
         {
-            fileCopy = fileCopy.substr(fileCopy.indexOf(lastWord));
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-            let nextWord = fileCopy.substr(0, fileCopy.indexOf(" "));
-            //implement existence if/else, which will have to search maxheap, ACCOUNT IN BIG(O)
-            let exists = false;
-
-            myHeap.add(nextWord);
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
+            if(word.toLowerCase() === lastWord.toLowerCase())
+            {
+                myHeap.increment(wordArray[i+1]);
+            }
         }
 
         return myHeap; // Replace 'bagel' with your actual implementation logic
@@ -73,47 +60,69 @@ class Implementation
 
     static helper2(lastWord, file)
     {
-        let fileCopy = file;
-        let myMapTwo = Map();
+        wordArray = file.split(" ");
+        let innerMap = new Map();
 
-        while(fileCopy.indexOf(lastWord) != -1)
+        for(let i = 0; i < wordArray.length; i++)
         {
-            fileCopy = fileCopy.substr(fileCopy.indexOf(lastWord));
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-            let nextWord = fileCopy.substr(0, fileCopy.indexOf(" "));
-            //implement existence if/else, which will have to search map, account in BIG(O)
-            let exists = false;
-
-            myMapTwo.insert(nextWord, 1);
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
+            if(word.toLowerCase() === lastWord.toLowerCase())
+            {
+                innerMap.insert(wordArray[i+1]);
+            }
         }
     }
 
     //takes in last word and performs method 1
-    //IGNORE THIS FOR NOW
     static implement1(lastWord) 
     {
-        
+        for ([key, value] of this.myMap1) 
+        {
+            if(key === lastWord)
+            {
+                return value.peek();
+            }
+        }
     }
 
     //takes in last word and performs method 2
-    //IGNORE THIS FOR NOW
     static implement2(lastWord) 
     {
-        let eastOfEden = readFile();
-
-        let myMap = Map();
-
-        while(fileCopy.indexOf(lastWord) != -1)
+        for ([key, innerMap] of this.myMap2) 
         {
-            fileCopy = fileCopy.substr(fileCopy.indexOf(lastWord));
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-            let nextWord = fileCopy.substr(0, fileCopy.indexOf(" "));
-            myMap.insert(nextWord);
-            fileCopy = fileCopy.substr(fileCopy.indexOf(" ") + 1);
-        }
+            let maxString = "";
 
-        return lastWord; // Replace 'bagel' with your actual implementation logic
+            if(key === lastWord)
+            {
+                let max = -1;
+
+                for([innerKey, value] of innerMap) 
+                {
+                    if(value > max)
+                    {
+                        max = value;
+                        maxString = innerKey;
+                    }
+                }
+            }
+
+            return maxString;
+        }
+    }
+
+    static implement(implementType, word)
+    {
+        if(implementType == "implement1")
+        {
+            this.implement1(word);
+        }
+        else if(implementType == "implement2")
+        {
+            this.implement2(word);
+        }
+        else
+        {
+            console.log("Invalid Input");
+        }
     }
 }
 
@@ -124,7 +133,6 @@ module.exports = Implementation;
 async function main() 
 {
     let implementation = new Implementation();
-    implementation.readFile();
 }
 
 main();
