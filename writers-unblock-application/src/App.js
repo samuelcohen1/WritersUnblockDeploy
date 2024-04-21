@@ -62,7 +62,7 @@ const App = () => {
           console.log(error);
         }
     }
-    if(sentence.charAt(sentence.length - 1) == ' ') {
+    if(sentence.length > 0 && sentence.charAt(sentence.length - 1) == ' ') {
        fetchServer();
     }
     

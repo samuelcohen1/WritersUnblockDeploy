@@ -13,17 +13,15 @@ const cors = require('cors'); // Import cors package
 
 app.use(cors());
 
+let imp = new Implementation();
 
 //takes in the last word and gives the next word
 app.get('/getWord/:lastWord/:method', (req, res) => {
-    //const nextWord = Implementation.implement(req.params.lastWord);
-    const arr = ['the', 'quick', 'brown', 'fox', 'jumps', 'over'];
-    console.log('hello world');
+
     const lastWord = req.params.lastWord;
-    let nextWord = "hello";
-    nextWord = arr.at((arr.indexOf(lastWord) + 1) % arr.length);
-    let method = req.params.method;
+    const method = req.params.method;
     console.log(method + "   " + lastWord);
+    let nextWord = imp.implement(lastWord, method);
     res.send(nextWord);
 });
 
