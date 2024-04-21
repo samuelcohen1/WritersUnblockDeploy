@@ -1,8 +1,5 @@
-//Adi
-const { Map } = require('../DataStructureImplementations/map.js');
-const { MaxHeap } = require('../DataStructureImplementations/maxheap.js');
-
-
+const Map = require('../DataStructureImplementations/map');
+const MaxHeap = require('../DataStructureImplementations/maxheap');
 const fs = require('fs');
 
 class Implementation 
@@ -123,10 +120,8 @@ class Implementation
 
 module.exports = Implementation;
 
-//export default Implementation;
-
-async function main() 
-{
+async function main() {
+    console.log('bleh');
     let implementation = new Implementation();
     console.log("Hi");
 }
