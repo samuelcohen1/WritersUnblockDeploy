@@ -39,7 +39,7 @@ class Implementation {
         // return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8').toLowerCase();  //FOR TESTING IMP.JS
     }
 
-    // takes in last word and performs method 1
+    // takes in last word and performs method 1 i.e. slow
     implement1(lastWord) {
         let maxFreqs = [0, 0, 0, 0, 0, 0];
         let mostFrequentList = ['', '', '','', '', ''];
@@ -67,7 +67,7 @@ class Implementation {
     }
     
 
-    // takes in last word and performs method 2
+    // takes in last word and performs method 2 i.e. fast
     implement2(lastWord) {
         if(this.map2.get(lastWord) == null)
             return " ";

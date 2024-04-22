@@ -20,8 +20,7 @@ app.get('/getWord/:lastWord/:method', (req, res) => {
 
     const lastWord = req.params.lastWord;
     const method = req.params.method;
-    console.log(method + "   " + lastWord);
-    let nextWord = imp.implement(lastWord, method);
+    let nextWord = imp.implement(lastWord, method === 'slow');
     res.send(nextWord);
 });
 
