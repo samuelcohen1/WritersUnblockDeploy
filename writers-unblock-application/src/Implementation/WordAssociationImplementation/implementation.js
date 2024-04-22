@@ -1,40 +1,110 @@
-// //Adi
-// const { Map } = require('../DataStructureImplementations/map');
-// const { MaxHeap } = require('../DataStructureImplementations/maxheap');
+const Map = require('../DataStructureImplementations/map');
+const MaxHeap = require('../DataStructureImplementations/maxheap');
+const fs = require('fs');
 
+class Implementation {
+    constructor() {
+        this.myMap1 = new Map();
+        this.myMap2 = new Map();
 
-// const fs = require('fs');
+        let text = this.readFile();
 
-// class Implementation {
-//     //reads east of eden text file
-//     readFile()  {
-//         fs.readFile('../../TextMaterial/EastofEden.txt', (err, data) => {
-//             //if (err) throw err;
-           
-//             return data.toString();
-//           });
-//     }
+        let wordArray = text.split(" ");
 
-//     //takes in last word and performs method 1
-//     static implement1(lastWord) {
-//         let eastOfEden = readFile();
-//         return lastWord; // Replace 'bagel' with your actual implementation logic
-//     }
+        for(let i = 0; i < wordArray.length; i++)
+        {
+            console.log(i);
+            let myHeap = new MaxHeap();
 
-//     //takes in last word and performs method 2
-//     static implement1(lastWord) {
-//         let eastOfEden = readFile();
-//         return lastWord; // Replace 'bagel' with your actual implementation logic
-//     }
-// }
+            for(let k = 0; k < wordArray.length; k++) 
+            {
+                if(wordArray[k].toLowerCase() === wordArray[i].toLowerCase()) 
+                {
+                    myHeap.increment(wordArray[k+1]);
+                }
+            }
+            //this.myMap1.insert(wordArray[i], Implementation.helper1(wordArray[i], wordArray));
+            //this.myMap2.insert(wordArray[i], Implementation.helper2(wordArray[i], wordArray));
+        }
+    }
 
-// module.exports = Implementation;
+    //CHANGE THIS TO YOUR OWN LATER
+    readFile() {
+        return fs.readFileSync('C:\\Users\\avpas\\OneDrive\\Documents\\GitHub\\WritersUnblock\\writers-unblock-application\\src\\TextMaterial\\HarryPotter_PrisonerofAzkaban.txt', 'utf8');
+    }
 
-// //export default Implementation;
+    static helper1(lastWord, wordArray)
+    {
+        let myHeap = new MaxHeap();
 
-// async function main() {
-//     let implementation = new Implementation();
-//     implementation.readFile();
-// }
+        for(let i = 0; i < wordArray.length; i++) 
+        {
+            if(wordArray[i].toLowerCase() === lastWord.toLowerCase()) 
+            {
+                myHeap.increment(wordArray[i+1]);
+            }
+        }
 
-// main();
+        return myHeap;
+    }
+
+    static helper2(lastWord, wordArray) 
+    {
+        let innerMap = new Map();
+
+        for(let i = 0; i < wordArray.length; i++) 
+        {
+            if(wordArray[i].toLowerCase() === lastWord.toLowerCase()) 
+            {
+                innerMap.insert(wordArray[i+1], 1); // Inserting with value 1, assuming it's a count
+            }
+        }
+
+        return innerMap;
+    }
+
+    static implement1(lastWord) {
+        for (let [key, value] of this.myMap1) {
+            if (key === lastWord) {
+                return value.peek();
+            }
+        }
+    }
+
+    static implement2(lastWord) {
+        for (let [key, innerMap] of this.myMap2) {
+            let maxString = "";
+            let max = -1;
+
+            if (key === lastWord) {
+                for (let [innerKey, value] of innerMap) {
+                    if (value > max) {
+                        max = value;
+                        maxString = innerKey;
+                    }
+                }
+            }
+
+            return maxString;
+        }
+    }
+
+    static implement(implementType, word) {
+        if (implementType === "implement1") {
+            return this.implement1(word);
+        } else if (implementType === "implement2") {
+            return this.implement2(word);
+        } else {
+            console.log("Invalid Input");
+        }
+    }
+}
+
+module.exports = Implementation;
+
+async function main() {
+    console.log('bleh');
+    let implementation = new Implementation();
+}
+
+main();
