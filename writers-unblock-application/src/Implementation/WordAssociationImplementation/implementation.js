@@ -11,7 +11,7 @@ class Implementation {
         this.map1 = new Map();   // map of maps
         this.map2 = new Map();   // maps of maxheaps
 
-        const wordArray = eastOfEden.split(' ');
+        const wordArray = eastOfEden.split(/[,\s!;:?."“”]+/);
 
         for (let i = 0; i < wordArray.length - 1; ++i) {
             if (this.map1.get(wordArray[i]) == null) {
@@ -30,53 +30,56 @@ class Implementation {
                 this.map2.get(wordArray[i]).increment(wordArray[i + 1]);
             }
         }
-        //console.log(this.map2.get("the"));
-        //console.log(this.map1);
-        //console.log(this.map2);
     }
 
     // reads east of eden text file
     readFile() {
-        return fs.readFileSync('./TextMaterial/EastofEden.txt', 'utf8');    // FOR RUNNING SERVER
-        //return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8');  //FOR TESTING IMP.JS
+        //return fs.readFileSync('./TextMaterial/EastofEden.txt', 'utf8').toLowerCase();    // FOR RUNNING SERVER
+        return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8').toLowerCase();  //FOR TESTING IMP.JS
     }
 
     // takes in last word and performs method 1
     implement1(lastWord) {
         let eastOfEden = this.readFile();
-        let maxFreq = 0;
-        let mostFrequentList = [];
-        if(this.map1.get(lastWord) == null)
+        let maxFreqs = [0, 0, 0, 0, 0, 0];
+        let mostFrequentList = ['', '', '','', '', ''];
+    
+        if (this.map1.get(lastWord) == null)
             return " ";   //change to something else
         let list = this.map1.get(lastWord).unravelList();
-        //console.log(list);
+    
         for (const [follower, freq] of list) {
-            //console.log(follower, this.map1.get(lastWord).get(follower));
-            const frequency = this.map1.get(lastWord).get(follower);
-            if (freq == maxFreq) {
-                mostFrequentList.push(follower);
-            } 
-            else if (freq > maxFreq) {
-                maxFreq = freq;
-                mostFrequentList = [follower];
+            for (let i = 0; i < 6; i++) {
+                if (freq >= maxFreqs[i]) {
+                    maxFreqs.splice(i, 0, freq);
+                    mostFrequentList.splice(i, 0, follower);
+                    maxFreqs.pop();
+                    mostFrequentList.pop();
+                    break;
+                }
             }
         }
-
-        return mostFrequentList[Math.floor(Math.random() * mostFrequentList.length)];
+    
+        const nonEmptyList = mostFrequentList.filter(word => word !== '');
+        return nonEmptyList[Math.floor(Math.random() * nonEmptyList.length)];
     }
+    
 
     // takes in last word and performs method 2
     implement2(lastWord) {
         if(this.map2.get(lastWord) == null)
             return " ";  //change to something else
-        //return this.map2.get(lastWord).peekRandom();
+        return this.map2.get(lastWord).peekRandom();
         //console.log(this.map2.get(lastWord));
-        return this.map2.get(lastWord).peek();
+        //return this.map2.get(lastWord).peek();
     }
 
-    implement(lastWord, method) {
+    implement(word, method) {
         //console.log(this.map1);
         //console.log(this.map2);
+        const lastWord = word.toLowerCase();
+        //console.log(lastWord);
+        //const lastWord = word;
         if (method)
             return this.implement1(lastWord);
         else
@@ -90,8 +93,31 @@ async function main() {
     //console.log("bleh");
     let implementation = new Implementation();
     
-    console.log(implementation.implement('Salinas', true));
-    console.log(implementation.implement('Salinas', false));
+    // console.log(implementation.implement('Salinas', true));
+    // console.log(implementation.implement('Salinas', false));
+
+    // console.log(implementation.implement('Sam', true));
+    // console.log(implementation.implement('Sam', false));
+
+    // console.log(implementation.implement('cat', true));
+    // console.log(implementation.implement('Cat', false));
+
+    let word1 = "Bartender";
+    let word2 = word1;
+    let result1 = "";
+    let result2 = "";
+    for(let i = 0; i < 100; ++i)
+    {
+        result1 += word1 + " ";
+        result2 += word2 + " ";
+        const a = implementation.implement(word1, false);
+        const b = implementation.implement(word2, true);
+        word1 = a;
+        word2 = b;
+    }
+    console.log(result1);
+    console.log('-----------------------------------------------');
+    console.log(result2);
 }
 
 main();
