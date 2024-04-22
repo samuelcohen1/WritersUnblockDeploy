@@ -1,110 +1,123 @@
 const Map = require('../DataStructureImplementations/map');
 const MaxHeap = require('../DataStructureImplementations/maxheap');
+
 const fs = require('fs');
 
 class Implementation {
     constructor() {
-        this.myMap1 = new Map();
-        this.myMap2 = new Map();
+        //console.log("bleh");
+        let eastOfEden = this.readFile();
+        //console.log("bleh");
+        this.map1 = new Map();   // map of maps
+        this.map2 = new Map();   // maps of maxheaps
 
-        let text = this.readFile();
+        const wordArray = eastOfEden.split(/[,\s!;:?."“”]+/);
 
-        let wordArray = text.split(" ");
+        for (let i = 0; i < wordArray.length - 1; ++i) {
+            if (this.map1.get(wordArray[i]) == null) {
+                let newMap = new Map();
+                newMap.insert(wordArray[i + 1], 1);
+                this.map1.insert(wordArray[i], newMap);
 
-        for(let i = 0; i < wordArray.length; i++)
-        {
-            console.log(i);
-            let myHeap = new MaxHeap();
-
-            for(let k = 0; k < wordArray.length; k++) 
-            {
-                if(wordArray[k].toLowerCase() === wordArray[i].toLowerCase()) 
-                {
-                    myHeap.increment(wordArray[k+1]);
-                }
+                let heap = new MaxHeap();
+                heap.add(wordArray[i + 1], 1);
+                // if(wordArray[i] == "the")
+                //     console.log(wordArray[i + 1]);
+                this.map2.insert(wordArray[i], heap);
+            } 
+            else {
+                this.map1.get(wordArray[i]).insert(wordArray[i + 1], this.map1.get(wordArray[i]).get(wordArray[i + 1]) + 1);
+                this.map2.get(wordArray[i]).increment(wordArray[i + 1]);
             }
-            this.myMap1.insert(wordArray[i], Implementation.helper1(wordArray[i], wordArray));
-            //this.myMap2.insert(wordArray[i], Implementation.helper2(wordArray[i], wordArray));
         }
     }
 
-    //CHANGE THIS TO YOUR OWN LATER
+    // reads east of eden text file
     readFile() {
-        return fs.readFileSync('./TextMaterial/HarryPotter_PrisonerofAzkaban.txt', 'utf8');
+        //return fs.readFileSync('./TextMaterial/EastofEden.txt', 'utf8').toLowerCase();    // FOR RUNNING SERVER
+        return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8').toLowerCase();  //FOR TESTING IMP.JS
     }
 
-    static helper1(lastWord, wordArray)
-    {
-        let myHeap = new MaxHeap();
-
-        for(let i = 0; i < wordArray.length; i++) 
-        {
-            if(wordArray[i].toLowerCase() === lastWord.toLowerCase()) 
-            {
-                myHeap.increment(wordArray[i+1]);
-            }
-        }
-
-        return myHeap;
-    }
-
-    static helper2(lastWord, wordArray) 
-    {
-        let innerMap = new Map();
-
-        for(let i = 0; i < wordArray.length; i++) 
-        {
-            if(wordArray[i].toLowerCase() === lastWord.toLowerCase()) 
-            {
-                innerMap.insert(wordArray[i+1], 1); // Inserting with value 1, assuming it's a count
-            }
-        }
-
-        return innerMap;
-    }
-
-    static implement1(lastWord) {
-        for (let [key, value] of this.myMap1) {
-            if (key === lastWord) {
-                return value.peek();
-            }
-        }
-    }
-
-    static implement2(lastWord) {
-        for (let [key, innerMap] of this.myMap2) {
-            let maxString = "";
-            let max = -1;
-
-            if (key === lastWord) {
-                for (let [innerKey, value] of innerMap) {
-                    if (value > max) {
-                        max = value;
-                        maxString = innerKey;
-                    }
+    // takes in last word and performs method 1
+    implement1(lastWord) {
+        let eastOfEden = this.readFile();
+        let maxFreqs = [0, 0, 0, 0, 0, 0];
+        let mostFrequentList = ['', '', '','', '', ''];
+    
+        if (this.map1.get(lastWord) == null)
+            return " ";   //change to something else
+        let list = this.map1.get(lastWord).unravelList();
+    
+        for (const [follower, freq] of list) {
+            for (let i = 0; i < 6; i++) {
+                if (freq >= maxFreqs[i]) {
+                    maxFreqs.splice(i, 0, freq);
+                    mostFrequentList.splice(i, 0, follower);
+                    maxFreqs.pop();
+                    mostFrequentList.pop();
+                    break;
                 }
             }
-
-            return maxString;
         }
+    
+        const nonEmptyList = mostFrequentList.filter(word => word !== '');
+        return nonEmptyList[Math.floor(Math.random() * nonEmptyList.length)];
+    }
+    
+
+    // takes in last word and performs method 2
+    implement2(lastWord) {
+        if(this.map2.get(lastWord) == null)
+            return " ";  //change to something else
+        return this.map2.get(lastWord).peekRandom();
+        //console.log(this.map2.get(lastWord));
+        //return this.map2.get(lastWord).peek();
     }
 
-    static implement(implementType, word) {
-        if (implementType === "implement1") {
-            return this.implement1(word);
-        } else if (implementType === "implement2") {
-            return this.implement2(word);
-        } else {
-            console.log("Invalid Input");
-        }
+    implement(word, method) {
+        //console.log(this.map1);
+        //console.log(this.map2);
+        const lastWord = word.toLowerCase();
+        //console.log(lastWord);
+        //const lastWord = word;
+        if (method)
+            return this.implement1(lastWord);
+        else
+            return this.implement2(lastWord);
     }
 }
 
 module.exports = Implementation;
 
 async function main() {
-    console.log('bleh');
+    //console.log("bleh");
     let implementation = new Implementation();
+    
+    // console.log(implementation.implement('Salinas', true));
+    // console.log(implementation.implement('Salinas', false));
+
+    // console.log(implementation.implement('Sam', true));
+    // console.log(implementation.implement('Sam', false));
+
+    // console.log(implementation.implement('cat', true));
+    // console.log(implementation.implement('Cat', false));
+
+    let word1 = "Bartender";
+    let word2 = word1;
+    let result1 = "";
+    let result2 = "";
+    for(let i = 0; i < 100; ++i)
+    {
+        result1 += word1 + " ";
+        result2 += word2 + " ";
+        const a = implementation.implement(word1, false);
+        const b = implementation.implement(word2, true);
+        word1 = a;
+        word2 = b;
+    }
+    console.log(result1);
+    console.log('-----------------------------------------------');
+    console.log(result2);
 }
 
 main();

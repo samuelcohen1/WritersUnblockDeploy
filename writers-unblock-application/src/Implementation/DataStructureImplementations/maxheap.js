@@ -46,23 +46,19 @@ class MaxHeap {
     }
 
     peekRandom() {
-        console.log('breh');
+        //console.log('breh');
         const heapArrayCopy = [...this.heapArray];
         let randArray = [];
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
-        console.log(randArray);
+        //console.log(randArray);
         this.heapArray = heapArrayCopy;
         return randArray[Math.floor(Math.random() * 3)].string;
     }
 
     increment(string) {
         const index = this.heapArray.findIndex(item => item.string === string);
-        if(index == -1)
-        {
-            this.add(string, 1);
-        }
         if (index !== -1) {
             this.heapArray[index].priority += 1;
 
@@ -72,6 +68,9 @@ class MaxHeap {
                 [this.heapArray[currIndex], this.heapArray[Math.floor((currIndex - 1) / 2)]] = [this.heapArray[Math.floor((currIndex - 1) / 2)], this.heapArray[currIndex]];
                 currIndex = Math.floor((currIndex - 1) / 2);
             }
+        }
+        else {
+            this.add(string, 1);
         }
     }
 
