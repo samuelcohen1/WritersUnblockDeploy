@@ -59,7 +59,7 @@ class MaxHeap {
 
     increment(string) {
         const index = this.heapArray.findIndex(item => item.string === string);
-        if(item == -1)
+        if(index == -1)
         {
             this.add(string, 1);
         }
