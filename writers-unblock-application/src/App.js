@@ -385,7 +385,7 @@ const App = () => {
             fontFamily: 'Courier, monospace',
             fontWeight: "400", fontSize: "17px", marginLeft: "30px"
           }}>
-            Our prediction is the word most likely to appear directly after the input word in <i>East of Eden</i>. We translated <i>East of Eden</i> into two weighted directed graphs where words are vertices and word adjacency frequencies are edges. One graph ("Slow Mode") is implemented as a hashmap of hashmaps, and the other graph ("Fast Mode") is implemented as a hashmap of maxheaps.<br />  <br />
+            Our prediction is the word most likely to appear directly after the input word in <i>East of Eden</i>. We translated <i>East of Eden</i> into two weighted directed graphs where words are vertices, word adjacencies are edges, and adjacency frequencies are edge weights. One graph ("Slow Mode") is implemented as a hashmap of hashmaps, and the other graph ("Fast Mode") is implemented as a hashmap of maxheaps.<br />  <br />
             {/* // A demo picture here would be realy cool! */}
           </Typography>
           <Typography style={{
@@ -400,7 +400,7 @@ const App = () => {
             fontWeight: "400", fontSize: "17px", marginLeft: "30px"
           }}>
 
-            <i>East of Eden</i> is in the public domain, so our suggestions are legal and safe to use. However, you should cite John Stienbeck whenever you use Writer's Unblocked for academic honesty purposes. <br /> <br />
+            <i>East of Eden</i> is in the public domain, so our suggestions are legal and safe to use. However, you should cite John Steinbeck whenever you use Writer's Unblock for academic honesty purposes. <br /> <br />
           </Typography>
 
 
@@ -418,16 +418,12 @@ const App = () => {
             fontWeight: "400", fontSize: "17px", marginLeft: "30px"
           }}>
             Samuel Cohen: Frontend and hashmap<br />
-            Abhinav Pothuri: Backend and maxheap <br />
+            Abhinav Pothuri: Backend, maxheap, and data cleaning <br />
             Adi Pasthumarti: Main method <br />
 
             {/* // A demo picture here would be realy cool! */}
           </Typography>
-
-
-
         </Box>
-
         <br />
       </Dialog>
 

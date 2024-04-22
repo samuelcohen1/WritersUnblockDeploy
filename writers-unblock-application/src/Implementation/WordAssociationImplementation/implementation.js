@@ -23,14 +23,14 @@ class Implementation {
                     myHeap.increment(wordArray[k+1]);
                 }
             }
-            //this.myMap1.insert(wordArray[i], Implementation.helper1(wordArray[i], wordArray));
+            this.myMap1.insert(wordArray[i], Implementation.helper1(wordArray[i], wordArray));
             //this.myMap2.insert(wordArray[i], Implementation.helper2(wordArray[i], wordArray));
         }
     }
 
     //CHANGE THIS TO YOUR OWN LATER
     readFile() {
-        return fs.readFileSync('C:\\Users\\avpas\\OneDrive\\Documents\\GitHub\\WritersUnblock\\writers-unblock-application\\src\\TextMaterial\\HarryPotter_PrisonerofAzkaban.txt', 'utf8');
+        return fs.readFileSync('./TextMaterial/HarryPotter_PrisonerofAzkaban.txt', 'utf8');
     }
 
     static helper1(lastWord, wordArray)
