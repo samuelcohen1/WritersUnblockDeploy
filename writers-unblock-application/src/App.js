@@ -22,17 +22,71 @@ const App = () => {
   const [sentence, setSentence] = useState('');
   const [prediction, setPrediction] = useState('');
   const [switchValue, setSwitchValue] = useState(false); // State for the Switch component
+  const [prevWord, setPrevWord] = useState('');
   const inputRef = useRef(null);
 
   const handleInputChange = (event) => {
     setSentence(event.target.value);
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Tab' && prediction) {
-      event.preventDefault(); 
+  //backend integration
+  const fetchServer = async (word) => {
+    try {
+      // const lastWord = suggestMode || genText === "" ? sentence.split(" ").slice(-2)[0] : genText.split(" ").slice(-2)[0];
+      const response = await axios.get(`http://localhost:8001/getWord/${word}/${mode}`);
+      setPrediction(response.data);
+      console.log(prediction);
+      return response.data;
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (suggestMode && sentence.charAt(sentence.length - 1) === ' ' && sentence.charAt(sentence.length - 2) !== " ") {
+      fetchServer(sentence.split(" ").slice(-2)[0]);
+    }
+    else
+    {
+      setPrediction("");
+    }
+
+  }, [sentence]);
+
+
+
+
+  const handleKeyDown = async (event) => {
+    if (event.key === 'Tab' && suggestMode && prediction) {
+      event.preventDefault();
       setSentence(`${sentence}${prediction}`);
       setPrediction('');
+    }
+
+    if (event.key === 'Enter' && !suggestMode) {
+      console.log("Enter hit");
+      // setGenText(sentence.split(" ").slice(-2)[0] + " ");  // Not done executing in time
+      setGenText(sentence + " ");
+      let currWord = sentence.split(" ").slice(-2)[0];
+
+      console.log("going in with genText at ", genText, "and currWord at", currWord);
+      for (let i = 0; i < 100; i++) {
+
+          await new Promise(resolve => setTimeout(resolve, 10));
+          console.log("going in w/ currWord at ", currWord);
+          // setPrevWord(genText.split(" ").slice(-2)[0]);
+          currWord = await fetchServer(currWord);   // Await or smth?   Could pass in the specific word, which might be helpful...  Maybe will need a return value...
+          // currWord = prediction;
+          // setGenText(`${genText} ${currWord}`);  // Might not be updated in time. Maybe move inside of fetchserver?
+          setGenText(prevGenText => `${prevGenText} ${currWord}`);
+          console.log("Setting genText with prediction ", prediction);
+          // setPrediction('');
+        
+      }
+
+
+      // setGenText("Enter just pressed!");
     }
   };
 
@@ -43,30 +97,10 @@ const App = () => {
     "the": "cat",
     "Potatoes are": "great",
     "The quick brown fox jumps over the lazy lazy lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllazy": "doggo",
-    "Samuel walked to the" : "store",
+    "Samuel walked to the": "store",
   };
 
-  useEffect(() => {
-    const predictedWord = mockPredictions[sentence.slice(0, inputRef.current.selectionStart)]; // Get prediction based on typed part
-    setPrediction(predictedWord);
 
-    //backend integration
-    const fetchServer = async () => {
-        try {
-          const lastWord = sentence.split(" ").slice(-2)[0];
-          const response = await axios.get(`http://localhost:8001/getWord/${lastWord}/${switchValue}`);
-          setPrediction(response.data);
-          console.log(prediction);
-        }
-        catch(error)  {
-          console.log(error);
-        }
-    }
-    if(sentence.length > 0 && sentence.charAt(sentence.length - 1) == ' ') {
-       fetchServer();
-    }
-    
-  }, [sentence]);
 
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue); // Update the state when the switch is toggled
@@ -86,12 +120,14 @@ const App = () => {
   const [suggestMode, setSuggestMode] = useState(true); // State for Suggest/Generate mode
 
   const handleSuggestModeToggle = () => {
+    setPrediction("");  // If we're switching to generate mode, delete the autocomplete text
+
     setSuggestMode(!suggestMode); // Toggle between Suggest and Generate modes
   };
 
-  const [genText, setGenText] = useState("Some lower text assdfjasdfljksdaf jklhsdfasdfapsoiufhpsaofidn sapdofinasdpfoinafsdnspf oisdnjhklsadfjhsadfiulbdud fidflioidbusdiubadsidusif");
+  const [genText, setGenText] = useState("");
 
-  
+
 
   const [openAboutDialog, setOpenAboutDialog] = useState(false);
 
@@ -121,7 +157,7 @@ const App = () => {
         </Typography>
         {/* Toggle Mode Button */}
         <div style={{ display: 'flex', alignItems: "center", marginRight: "20px" }}>
-        <Button
+          <Button
             variant="contained"
             onClick={handleSuggestModeToggle}
             style={{
@@ -131,8 +167,8 @@ const App = () => {
               borderRadius: '20px',
               padding: '10px 20px',
               fontFamily: 'Josefin',
-              fontSize: suggestMode? '30px' : '25px',
-              fontWeight: suggestMode  ? '200' : '800',
+              fontSize: suggestMode ? '30px' : '25px',
+              fontWeight: suggestMode ? '200' : '800',
               width: '150px',
               height: '80px',
               marginRight: '20px', // Adjust margin for right alignment
@@ -191,50 +227,50 @@ const App = () => {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
 
 
-      <TextField
-        placeholder="Your sentence here"
-        value={sentence}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        inputRef={inputRef}
-        InputProps={{
-          endAdornment: prediction ? (
-            <Typography
-              variant="body1"
-              style={{
-                marginTop: "1px",
-                marginRight: prediction ? `${1162 + 9.75 - sentence.length * 9.75 - prediction.length * 9.75}px` : '300px',
-                fontFamily: 'Courier, monospace',
-                color: 'gray',
-                fontWeight: "600"
-                // marginLeft: '80px', // Adjust spacing between text and prediction
-              }}
-            >
-              {prediction}
-            </Typography>
-          ) : null,
-        }}
-        sx={{
-          '& input': {
-            fontFamily: 'Courier, monospace',
-            fontWeight: "600"
-          },
-          'fieldset.MuiOutlinedInput-notchedOutline': {
-            border: '2px solid #233D',
-            borderRadius: '10px',
-          },
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#666E87',
-              borderWidth: '2px',
+        <TextField
+          placeholder="Your sentence here"
+          value={sentence}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          inputRef={inputRef}
+          InputProps={{
+            endAdornment: prediction && suggestMode ? (
+              <Typography
+                variant="body1"
+                style={{
+                  marginTop: "1px",
+                  marginRight: prediction ? `${1162 + 9.75 - sentence.length * 9.75 - prediction.length * 9.75}px` : '300px',
+                  fontFamily: 'Courier, monospace',
+                  color: 'gray',
+                  fontWeight: "600"
+                  // marginLeft: '80px', // Adjust spacing between text and prediction
+                }}
+              >
+                {prediction}
+              </Typography>
+            ) : null,
+          }}
+          sx={{
+            '& input': {
+              fontFamily: 'Courier, monospace',
+              fontWeight: "600"
             },
-          },
-        }}
-        style={{
-          width: "1200px",
-          margin: '10px 0',
-        }}
-      />
+            'fieldset.MuiOutlinedInput-notchedOutline': {
+              border: '2px solid #233D',
+              borderRadius: '10px',
+            },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#666E87',
+                borderWidth: '2px',
+              },
+            },
+          }}
+          style={{
+            width: "1200px",
+            margin: '10px 0',
+          }}
+        />
 
 
 
@@ -242,41 +278,41 @@ const App = () => {
       </div>
 
 
-      {suggestMode ? 
-      
-      <Typography
-      variant="body1"
-      style={{
-        marginTop: "40px",
-        marginLeft: "20px",
-        fontFamily: 'Courier, monospace',
-        fontWeight: "500",
-        fontSize: "25px",
+      {suggestMode ?
 
-        // marginLeft: '80px', // Adjust spacing between text and prediction
-      }}
-    >
-      Press tab to accept suggestions. <br />
-      Remember to cite John Steinbeck whenever you use Writer's Unblock. 
-      
-    </Typography> : 
+        <Typography
+          variant="body1"
+          style={{
+            marginTop: "40px",
+            marginLeft: "20px",
+            fontFamily: 'Courier, monospace',
+            fontWeight: "500",
+            fontSize: "25px",
 
-<Typography
-variant="body1"
-style={{
-  marginTop: "40px",
-  marginLeft: "20px",
-  fontFamily: 'Courier, monospace',
-  fontWeight: "500",
-  fontSize: "25px",
+            // marginLeft: '80px', // Adjust spacing between text and prediction
+          }}
+        >
+          Press space to show suggestion and press tab to accept suggestion. <br />
+          Remember to cite John Steinbeck whenever you use Writer's Unblock.
 
-  // marginLeft: '80px', // Adjust spacing between text and prediction
-}}
->
-  Press enter to generate text: <br /> <br />
-{genText}
-</Typography>
-    }
+        </Typography> :
+
+        <Typography
+          variant="body1"
+          style={{
+            marginTop: "40px",
+            marginLeft: "20px",
+            fontFamily: 'Courier, monospace',
+            fontWeight: "500",
+            fontSize: "25px",
+
+            // marginLeft: '80px', // Adjust spacing between text and prediction
+          }}
+        >
+          Press enter to generate text: <br /> <br />
+          {genText}
+        </Typography>
+      }
 
 
 
