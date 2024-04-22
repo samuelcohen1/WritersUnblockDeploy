@@ -54,7 +54,6 @@ class MaxHeap {
 
     //picks random from top 6
     peekRandom() {
-        //console.log('breh');
         const heapArrayCopy = [...this.heapArray];
         let randArray = [];
         randArray.push(this.extractMax());
@@ -63,7 +62,6 @@ class MaxHeap {
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
-        //console.log(randArray);
         this.heapArray = heapArrayCopy;
         return randArray[Math.floor(Math.random() * 3)].string;
     }

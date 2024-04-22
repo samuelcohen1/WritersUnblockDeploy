@@ -5,9 +5,7 @@ const fs = require('fs');
 
 class Implementation {
     constructor() {
-        //console.log("bleh");
         let eastOfEden = this.readFile();
-        //console.log("bleh");
         this.map1 = new Map();   // map of maps
         this.map2 = new Map();   // maps of maxheaps
 
