@@ -34,8 +34,8 @@ class Implementation {
 
     // reads east of eden text file
     readFile() {
-        //return fs.readFileSync('./TextMaterial/EastofEden.txt', 'utf8').toLowerCase();    // FOR RUNNING SERVER
-        return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8').toLowerCase();  //FOR TESTING IMP.JS
+        return fs.readFileSync('./TextMaterial/EastofEden.txt', 'utf8').toLowerCase();    // FOR RUNNING SERVER
+        // return fs.readFileSync('../../TextMaterial/EastofEden.txt', 'utf8').toLowerCase();  //FOR TESTING IMP.JS
     }
 
     // takes in last word and performs method 1
