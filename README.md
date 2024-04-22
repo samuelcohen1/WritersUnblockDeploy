@@ -9,7 +9,9 @@ Open up the directory where you want to have the code and do:
 `git clone https://github.com/raspberrysir/WritersUnblock.git`
 
 ## Install Dependencies
-Install all necessary dependencies using
+Install all necessary dependencies in the inner directory using
+
+`cd writers-unblock-application`
 
 `npm install`
 
