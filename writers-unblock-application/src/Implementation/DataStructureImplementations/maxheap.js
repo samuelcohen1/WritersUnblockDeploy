@@ -1,15 +1,19 @@
 class MaxHeap {
+    //constructor for maxheap
     constructor() {
         this.heapArray = [];
     }
 
+    //standard maxheap heapify down
     heapifyDown() {
         let currIndex = 0;
         while (2 * currIndex + 1 < this.heapArray.length) {
+            //get children
             let left = 2 * currIndex + 1;
             let right = 2 * currIndex + 2;
             let swapIndex = left;
 
+            //swap if needed
             if (right < this.heapArray.length && this.heapArray[right].priority > this.heapArray[left].priority)
                 swapIndex = right;
 
@@ -21,6 +25,7 @@ class MaxHeap {
         }
     }
 
+    //add with a certain string and priority int
     add(string, priority) {
         this.heapArray.push({ string, priority });
         let currIndex = this.heapArray.length - 1;
@@ -31,10 +36,12 @@ class MaxHeap {
         }
     }
 
+    //gets maximum value
     peek() {
         return this.heapArray[0].string;
     }
 
+    //extracts max
     extractMax() {
         if (this.heapArray.length === 0)
             return null;
@@ -45,18 +52,21 @@ class MaxHeap {
         return max;
     }
 
+    //picks random from top 6
     peekRandom() {
-        //console.log('breh');
         const heapArrayCopy = [...this.heapArray];
         let randArray = [];
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
         randArray.push(this.extractMax());
-        //console.log(randArray);
+        randArray.push(this.extractMax());
+        randArray.push(this.extractMax());
+        randArray.push(this.extractMax());
         this.heapArray = heapArrayCopy;
         return randArray[Math.floor(Math.random() * 3)].string;
     }
 
+    //increments item or adds with priority 1 if not found. reorders as needed
     increment(string) {
         const index = this.heapArray.findIndex(item => item.string === string);
         if (index !== -1) {
@@ -74,6 +84,7 @@ class MaxHeap {
         }
     }
 
+    //prints the maxheap for testing purposes
     print() {
         let str = "[";
         for (let i = 0; i < this.heapArray.length; ++i) {
