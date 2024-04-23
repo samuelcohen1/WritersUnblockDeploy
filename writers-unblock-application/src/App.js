@@ -15,24 +15,19 @@ import Box from '@mui/material/Box'; // Import CloseIcon component
 import axios from 'axios'; //Import axios for backend integration
 
 
-
-
-
 const App = () => {
+  // Track states for current text and predicted text
   const [sentence, setSentence] = useState('');
   const [prediction, setPrediction] = useState('');
-  const [switchValue, setSwitchValue] = useState(false); // State for the Switch component
-  const [prevWord, setPrevWord] = useState('');
   const inputRef = useRef(null);
 
   const handleInputChange = (event) => {
     setSentence(event.target.value);
   };
 
-  //backend integration
+  // Backend integration
   const fetchServer = async (word) => {
     try {
-      // const lastWord = suggestMode || genText === "" ? sentence.split(" ").slice(-2)[0] : genText.split(" ").slice(-2)[0];
       const response = await axios.get(`http://localhost:8001/getWord/${word}/${mode}`);
       setPrediction(response.data);
       console.log(prediction);
@@ -43,20 +38,19 @@ const App = () => {
     }
   }
 
+  // Calls fetchServer when the sentence changes
   useEffect(() => {
     if (suggestMode && sentence.charAt(sentence.length - 1) === ' ' && sentence.charAt(sentence.length - 2) !== " ") {
       fetchServer(sentence.split(" ").slice(-2)[0]);
     }
-    else
-    {
+    else {
       setPrediction("");
     }
 
   }, [sentence]);
 
 
-
-
+  // Handle tab and enter key presses
   const handleKeyDown = async (event) => {
     if (event.key === 'Tab' && suggestMode && prediction) {
       event.preventDefault();
@@ -66,51 +60,25 @@ const App = () => {
 
     if (event.key === 'Enter' && !suggestMode) {
       console.log("Enter hit");
-      // setGenText(sentence.split(" ").slice(-2)[0] + " ");  // Not done executing in time
       setGenText(sentence + " ");
       let currWord = sentence.split(" ").slice(-2)[0];
 
       console.log("going in with genText at ", genText, "and currWord at", currWord);
       for (let i = 0; i < 100; i++) {
 
-          await new Promise(resolve => setTimeout(resolve, 10));
-          console.log("going in w/ currWord at ", currWord);
-          // setPrevWord(genText.split(" ").slice(-2)[0]);
-          currWord = await fetchServer(currWord);   // Await or smth?   Could pass in the specific word, which might be helpful...  Maybe will need a return value...
-          // currWord = prediction;
-          // setGenText(`${genText} ${currWord}`);  // Might not be updated in time. Maybe move inside of fetchserver?
-          setGenText(prevGenText => `${prevGenText} ${currWord}`);
-          console.log("Setting genText with prediction ", prediction);
-          // setPrediction('');
-        
+        await new Promise(resolve => setTimeout(resolve, 10));
+        console.log("going in w/ currWord at ", currWord);
+        currWord = await fetchServer(currWord);   // Must await so that everything updates correctly
+
+        setGenText(prevGenText => `${prevGenText} ${currWord}`);
+        console.log("Setting genText with prediction ", prediction);
       }
-
-
-      // setGenText("Enter just pressed!");
     }
   };
 
-  // Mock data (replace with your backend integration later)
-  const mockPredictions = {
-    "The quick brown fox jumps over the lazy": "dog",
-    "Once upon a time in a": "fairytale",
-    "the": "cat",
-    "Potatoes are": "great",
-    "The quick brown fox jumps over the lazy lazy lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllazy": "doggo",
-    "Samuel walked to the": "store",
-  };
 
-
-
-  const handleSwitchChange = () => {
-    setSwitchValue(!switchValue); // Update the state when the switch is toggled
-  };
-
+  // Track button states
   const [mode, setMode] = useState('slow'); // State to track the current mode
-
-  const handleModeChange = (selectedMode) => {
-    setMode(selectedMode); // Update the mode when a button is clicked
-  }
 
   const handleModeToggle = () => {
     const newMode = mode === 'slow' ? 'fast' : 'slow'; // Toggle between 'slow' and 'fast' modes
@@ -128,7 +96,7 @@ const App = () => {
   const [genText, setGenText] = useState("");
 
 
-
+  // State tracking for the "About" dialog
   const [openAboutDialog, setOpenAboutDialog] = useState(false);
 
   const handleOpenAboutDialog = () => {
@@ -139,11 +107,11 @@ const App = () => {
     setOpenAboutDialog(false);
   };
 
+
   return (
     <div style={{ minWidth: "1200px", backgroundColor: "#FFF7ED", minHeight: "100vh", padding: "50px" }}>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {/* Typography */}
         <Typography
           style={{
             fontFamily: 'Josefin',
@@ -155,8 +123,9 @@ const App = () => {
         >
           Writer's Unblock
         </Typography>
-        {/* Toggle Mode Button */}
+
         <div style={{ display: 'flex', alignItems: "center", marginRight: "20px" }}>
+          {/* Suggest/Generate Mode Button */}
           <Button
             variant="contained"
             onClick={handleSuggestModeToggle}
@@ -177,6 +146,8 @@ const App = () => {
           >
             {suggestMode ? 'Suggest' : 'Generate'}
           </Button>
+
+          {/* Slow/Fast Mode Button */}
           <Button
             variant="contained"
             onClick={handleModeToggle}
@@ -234,12 +205,12 @@ const App = () => {
           onKeyDown={handleKeyDown}
           inputRef={inputRef}
           InputProps={{
-            endAdornment: prediction && suggestMode ? (
+            endAdornment: prediction && suggestMode ? (   // This endAdornment holds the prediction
               <Typography
                 variant="body1"
                 style={{
                   marginTop: "1px",
-                  marginRight: prediction ? `${1162 + 9.75 - sentence.length * 9.75 - prediction.length * 9.75}px` : '300px',
+                  marginRight: prediction ? `${1162 + 9.75 - sentence.length * 9.75 - prediction.length * 9.75}px` : '300px',    // Adjusted exactly to align with current text
                   fontFamily: 'Courier, monospace',
                   color: 'gray',
                   fontWeight: "600"
@@ -272,14 +243,11 @@ const App = () => {
           }}
         />
 
-
-
-
       </div>
 
 
+      {/* Display below the text box */}
       {suggestMode ?
-
         <Typography
           variant="body1"
           style={{
@@ -314,29 +282,7 @@ const App = () => {
         </Typography>
       }
 
-
-
-
-      {/* <Grid container alignItems="center" spacing={2}>
-        <Grid item>
-          <Typography>Slow</Typography>
-        </Grid>
-        <Grid item>
-          <Switch
-            checked={switchValue}
-            onChange={handleSwitchChange}
-            size="medium"
-          />
-        </Grid>
-        <Grid item>
-          <Typography>Fast</Typography>
-        </Grid>
-      </Grid> */}
-
-
-
-
-
+      {/* "About" pop-up */}
       <Dialog open={openAboutDialog} onClose={handleCloseAboutDialog} fullWidth maxWidth="md" >
         <DialogTitle>
           <div style={{
@@ -426,12 +372,6 @@ const App = () => {
         </Box>
         <br />
       </Dialog>
-
-
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {/* Toggle Mode Button */}
-
-      </div>
     </div>
   );
 };
