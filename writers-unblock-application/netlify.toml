@@ -1,0 +1,10 @@
+[build]
+  base = "writers-unblock-application"
+  publish = "writers-unblock-application/public"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22.14.0"
+
+[functions]
+  directory = "netlify/functions"
