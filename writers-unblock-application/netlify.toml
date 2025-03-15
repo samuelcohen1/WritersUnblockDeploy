@@ -1,7 +1,7 @@
 [build]
   base = "writers-unblock-application"
   publish = "writers-unblock-application/public"
-  command = "npm run build"
+  command = "CI= npm run build"
 
 [build.environment]
   NODE_VERSION = "22.14.0"
