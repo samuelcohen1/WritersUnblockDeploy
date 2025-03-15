@@ -1,6 +1,6 @@
 [build]
   base = "writers-unblock-application"
-  publish = "writers-unblock-application/public"
+  publish = "public"
   command = "CI= npm run build"
 
 [build.environment]
